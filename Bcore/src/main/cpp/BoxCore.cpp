@@ -14,6 +14,7 @@
 #include <Hook/DexFileHook.h>
 #include <Hook/RuntimeHook.h>
 #include "Utils/HexDump.h"
+#include "Utils/VirtualSpoof.h"
 #include "hidden_api.h"
 
 struct {
@@ -23,7 +24,6 @@ struct {
     jmethodID redirectPathString;
     jmethodID redirectPathFile;
     jmethodID loadEmptyDex;
-    jmethodID loadEmptyDexL;
     int api_level;
 } VMEnv;
 
@@ -75,7 +75,7 @@ void nativeHook(JNIEnv *env) {
     UnixFileSystemHook::init(env);
     FileSystemHook::init();
     VMClassLoaderHook::init(env);
-
+    RuntimeHook::init(env);
     BinderHook::init(env);
     DexFileHook::init(env);
 }
@@ -171,5 +171,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
         return JNI_EVERSION;
     }
     registerMethod(env);
+    // Initialize VirtualSpoof after JNI is ready (not in __attribute__((constructor)))
+    VirtualSpoof_init();
     return JNI_VERSION_1_6;
 }

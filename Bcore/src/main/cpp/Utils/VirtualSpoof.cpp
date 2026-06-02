@@ -1,6 +1,6 @@
 #include <sys/system_properties.h>
 #include <cstring>
-#include "./xdl.h"
+#include "xdl.h"
 #include <android/log.h>
 #include <dlfcn.h>
 #include "Dobby/dobby.h"
@@ -33,7 +33,7 @@ SpoofedProp spoofed_props[] = {
         {"ro.kernel.android.qemud", ""},
         {"ro.hardware.egl", "adreno"},
         {"ro.boot.qemu", "0"},
-    {nullptr, nullptr} 
+    {nullptr, nullptr}
 };
 
 
@@ -57,23 +57,26 @@ int my_system_property_get(const char *name, char *value) {
 
 void install_property_get_hook() {
     void* handle = xdl_open("libc.so", XDL_DEFAULT);
+    if (!handle) {
+        LOGD("VirtualSpoof: Failed to open libc.so");
+        return;
+    }
     void* target = xdl_dsym(handle, "__system_property_get", nullptr);
     if (target) {
         if (DobbyHook(target, (void*)my_system_property_get, (void**)&orig_system_property_get) == 0) {
-            LOGD("Spoof installed successfully");
+            LOGD("VirtualSpoof: Spoof installed successfully");
         } else {
-            LOGD("Spoof hook failed");
+            LOGD("VirtualSpoof: Spoof hook failed");
         }
-        xdl_close(handle);
-    } else{
-        xdl_close(handle);
+    } else {
+        LOGD("VirtualSpoof: Could not find __system_property_get symbol");
     }
-
+    xdl_close(handle);
 }
 
-
-__attribute__((constructor)) void init_virtual_spoof()
-{
+// Explicit initialization function called from JNI_OnLoad instead of
+// __attribute__((constructor)) which runs too early before Dobby is ready.
+void VirtualSpoof_init() {
     install_property_get_hook();
     LOGD("VirtualSpoof: __system_property_get hook loaded");
 }

@@ -2,7 +2,7 @@
 #include <IO.h>
 #include <BoxCore.h>
 #include "UnixFileSystemHook.h"
-#import "JniHook/JniHook.h"
+#include "JniHook/JniHook.h"
 #include <sys/stat.h>
 
 HOOK_JNI(jobject, openDexFileNative, JNIEnv *env, jobject obj,jstring sourceName, jstring outputName, jint flags,jobject loader, jobject elements) {

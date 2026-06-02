@@ -77,8 +77,8 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:input:3.3.0'
 
-    // StateView
-    implementation 'com.github.nukc:StateView:v3.0.1'
+    // StateView (local module - JitPack repo unavailable)
+    implementation project(':stateview')
 
     // DotsIndicator for ViewPager2
     implementation 'com.tbuonomo:dotsindicator:4.3'
@@ -92,8 +92,7 @@ dependencies {
     // CornerLabelView (local module - JitPack repo unavailable)
     implementation project(':cornerlabelview')
 
-    // CatLoadingView
-    implementation files('libs/catloading-release.aar')
+    // CatLoadingView (already included via fileTree above, but explicit for clarity)
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'

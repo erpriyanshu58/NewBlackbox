@@ -21,11 +21,21 @@ int new_open(const char *pathname, int flags, ...) {
     if (pathname != nullptr) {
         if (strstr(pathname, "resource-cache") || 
             strstr(pathname, "@idmap") || 
-            strstr(pathname, ".frro") ||
-            strstr(pathname, "systemui") ||
             strstr(pathname, "data@resource-cache@")) {
             ALOGD("FileSystemHook: Blocking problematic file access: %s", pathname);
             errno = ENOENT; 
+            return -1;
+        }
+        // Block only specific problematic systemui overlay files, not ALL systemui paths
+        if (strstr(pathname, "systemui") && (strstr(pathname, ".frro") || strstr(pathname, "-accent-") || strstr(pathname, "-dynamic-") || strstr(pathname, "-neutral-"))) {
+            ALOGD("FileSystemHook: Blocking systemui overlay file access: %s", pathname);
+            errno = ENOENT;
+            return -1;
+        }
+        // Block .frro files only if NOT in /blackbox/ path
+        if (strstr(pathname, ".frro") && !strstr(pathname, "/blackbox/")) {
+            ALOGD("FileSystemHook: Blocking .frro file access: %s", pathname);
+            errno = ENOENT;
             return -1;
         }
     }
@@ -45,11 +55,21 @@ int new_open64(const char *pathname, int flags, ...) {
     if (pathname != nullptr) {
         if (strstr(pathname, "resource-cache") || 
             strstr(pathname, "@idmap") || 
-            strstr(pathname, ".frro") ||
-            strstr(pathname, "systemui") ||
             strstr(pathname, "data@resource-cache@")) {
             ALOGD("FileSystemHook: Blocking problematic file access (64): %s", pathname);
             errno = ENOENT; 
+            return -1;
+        }
+        // Block only specific problematic systemui overlay files, not ALL systemui paths
+        if (strstr(pathname, "systemui") && (strstr(pathname, ".frro") || strstr(pathname, "-accent-") || strstr(pathname, "-dynamic-") || strstr(pathname, "-neutral-"))) {
+            ALOGD("FileSystemHook: Blocking systemui overlay file access (64): %s", pathname);
+            errno = ENOENT;
+            return -1;
+        }
+        // Block .frro files only if NOT in /blackbox/ path
+        if (strstr(pathname, ".frro") && !strstr(pathname, "/blackbox/")) {
+            ALOGD("FileSystemHook: Blocking .frro file access (64): %s", pathname);
+            errno = ENOENT;
             return -1;
         }
     }

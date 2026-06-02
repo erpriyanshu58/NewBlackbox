@@ -1,0 +1,6 @@
+#ifndef VIRTUALM_VIRTUALSPOOF_H
+#define VIRTUALM_VIRTUALSPOOF_H
+
+void VirtualSpoof_init();
+
+#endif // VIRTUALM_VIRTUALSPOOF_H

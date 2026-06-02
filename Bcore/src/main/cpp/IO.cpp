@@ -19,7 +19,7 @@ char *replace(const char *str, const char *src, const char *dst) {
 
     size_t result_len = strlen(str) + (strlen(dst) - strlen(src)) * count + 1;
     char *result = (char *) malloc(result_len);
-    memset(result, 0, strlen(result));
+    memset(result, 0, result_len);
 
     const char *left = str;
     const char *right = nullptr;
@@ -47,27 +47,20 @@ const char *IO::redirectPath(const char *__path) {
         return "/dev/null";
     }
     
-    
+    // Block only specific problematic systemui overlay paths, not ALL systemui paths
     if (strstr(__path, "systemui") && (strstr(__path, ".frro") || strstr(__path, "-accent-") || strstr(__path, "-dynamic-") || strstr(__path, "-neutral-"))) {
-        ALOGD("Blocking systemui problematic path: %s", __path);
+        ALOGD("Blocking systemui problematic overlay path: %s", __path);
         return "/dev/null";
     }
-    
     
     if (strstr(__path, "data@resource-cache@")) {
         ALOGD("Blocking data@resource-cache@ pattern: %s", __path);
         return "/dev/null";
     }
     
-    
-    if (strstr(__path, ".frro")) {
+    // Block .frro files only if NOT in /blackbox/ path (virtual app may need them)
+    if (strstr(__path, ".frro") && !strstr(__path, "/blackbox/")) {
         ALOGD("Blocking .frro file: %s", __path);
-        return "/dev/null";
-    }
-    
-    
-    if (strstr(__path, "systemui")) {
-        ALOGD("Blocking systemui path: %s", __path);
         return "/dev/null";
     }
 
