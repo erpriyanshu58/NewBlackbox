@@ -89,6 +89,9 @@ dependencies {
     // RVAdapter (local module - JitPack repo deleted)
     implementation project(':rvadapter')
 
+    // CornerLabelView (local module - JitPack repo unavailable)
+    implementation project(':cornerlabelview')
+
     // CatLoadingView
     implementation files('libs/catloading-release.aar')
 

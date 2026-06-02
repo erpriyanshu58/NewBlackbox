@@ -22,3 +22,4 @@ include(":black-reflection")
 include(":compiler")
 include ':Bcore'
 include ':rvadapter'
+include ':cornerlabelview'
