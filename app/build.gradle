@@ -83,11 +83,11 @@ dependencies {
     // DotsIndicator for ViewPager2
     implementation 'com.tbuonomo:dotsindicator:4.3'
 
-    // SimpleSearchView
-    implementation 'com.github.ferfalk:SimpleSearchView:1.0.1'
+    // SimpleSearchView (use 0.2.1 as 1.0.1 doesn't exist on JitPack)
+    implementation 'com.github.ferfalk:SimpleSearchView:0.2.1'
 
-    // RVAdapter
-    implementation 'com.github.nukc:RVAdapter:v2.1.0'
+    // RVAdapter (local module - JitPack repo deleted)
+    implementation project(':rvadapter')
 
     // CatLoadingView
     implementation files('libs/catloading-release.aar')
