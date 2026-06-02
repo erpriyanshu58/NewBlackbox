@@ -11,6 +11,7 @@ android {
     buildFeatures {
         aidl true
         prefab true
+        buildConfig false
     }
     
     defaultConfig {
@@ -23,10 +24,6 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        debug {
             minifyEnabled false
         }
     }
@@ -67,6 +64,4 @@ dependencies {
     implementation project(":black-reflection")
     annotationProcessor project(":compiler")
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.moandjiezana.toml:toml4j:0.7.2'
-    implementation 'com.github.tiann:FreeReflection:3.2.2'
 }

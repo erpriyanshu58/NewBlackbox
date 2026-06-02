@@ -32,9 +32,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            minifyEnabled false
-        }
     }
     
     compileOptions {
@@ -45,6 +42,7 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding false
+        buildConfig true
     }
     
     kotlinOptions {
@@ -71,22 +69,15 @@ dependencies {
     androidTestImplementation libs.espresso.core
 
     implementation "androidx.preference:preference-ktx:1.2.1"
-    
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.2"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
-
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
-
     implementation 'com.github.Othershe:CornerLabelView:1.0.0'
-    implementation 'com.github.nukc.StateView:kotlin:2.0.0'
     implementation 'com.github.Ferfalk:SimpleSearchView:0.2.0'
     implementation 'com.tbuonomo:dotsindicator:4.2'
-    
     implementation 'org.osmdroid:osmdroid-android:6.1.11'
-    
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:input:3.3.0'
-
     implementation 'androidx.work:work-runtime:2.9.0'
 }
