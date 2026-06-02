@@ -15,7 +15,7 @@ android {
         prefab true
     }
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdk
+        minSdk rootProject.ext.minSdk
 
         consumerProguardFiles "consumer-rules.pro"
         ndk {
@@ -52,13 +52,12 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-    packagingOptions {
+    packaging {
         jniLibs {
             useLegacyPackaging true
         }
     }
-    lintOptions {
-
+    lint {
         checkReleaseBuilds false
         abortOnError false
         warningsAsErrors false
