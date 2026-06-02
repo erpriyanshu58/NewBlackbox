@@ -301,6 +301,10 @@ public class ActivityStack {
         if (resultTo == null) {
             shadow.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
+        // Null check: if source process has died, launch in a new task instead
+        if (sourceRecord.processRecord == null || sourceRecord.processRecord.appThread == null) {
+            return startActivityInNewTaskLocked(userId, intent, activityInfo, resultTo, launchMode);
+        }
         return realStartActivityLocked(sourceRecord.processRecord.appThread, shadow, resolvedType, resultTo, resultWho, requestCode, flags, options);
     }
 

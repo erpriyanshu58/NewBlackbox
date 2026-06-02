@@ -285,7 +285,7 @@ class BlackBoxLoader {
                                                         file.absolutePath,
                                                         0
                                                 )
-                                        false
+                                        packageInfo != null
                                     } catch (e: Exception) {
                                         Log.e(TAG, "Error in requestInstallPackage: ${e.message}")
                                         false

@@ -18,14 +18,14 @@ public class ProxyPendingActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        finish();
         ProxyPendingRecord pendingActivityRecord = ProxyPendingRecord.create(getIntent());
         Slog.d(TAG, "ProxyPendingActivity: " + pendingActivityRecord);
-        if (pendingActivityRecord.mTarget == null)
-            return;
-        pendingActivityRecord.mTarget.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        pendingActivityRecord.mTarget.setExtrasClassLoader(BlackBoxCore.getApplication().getClassLoader());
-        startActivity(pendingActivityRecord.mTarget);
+        if (pendingActivityRecord.mTarget != null) {
+            pendingActivityRecord.mTarget.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            pendingActivityRecord.mTarget.setExtrasClassLoader(BlackBoxCore.getApplication().getClassLoader());
+            startActivity(pendingActivityRecord.mTarget);
+        }
+        finish();
     }
 
     public static class P0 extends ProxyPendingActivity {

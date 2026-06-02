@@ -448,7 +448,7 @@ class AppsRepository {
     private fun scanUser() {
         try {
             val blackBoxCore = BlackBoxCore.get()
-            val userList = blackBoxCore.users
+            val userList = blackBoxCore.getUsers()
 
             if (userList.isEmpty()) {
                 return

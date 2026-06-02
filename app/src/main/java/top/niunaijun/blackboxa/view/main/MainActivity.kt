@@ -281,7 +281,7 @@ class MainActivity : LoadingActivity() {
 
     private fun initViewPager() {
         try {
-            val userList = BlackBoxCore.get().users
+            val userList = BlackBoxCore.get().getUsers()
             userList.forEach { fragmentList.add(AppsFragment.newInstance(it.id)) }
 
             currentUser = userList.firstOrNull()?.id ?: 0
@@ -343,7 +343,7 @@ class MainActivity : LoadingActivity() {
 
     fun scanUser() {
         try {
-            val userList = BlackBoxCore.get().users
+            val userList = BlackBoxCore.get().getUsers()
 
             if (fragmentList.size == userList.size) {
                 fragmentList.add(AppsFragment.newInstance(fragmentList.size))

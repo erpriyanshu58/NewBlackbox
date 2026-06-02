@@ -42,6 +42,7 @@ import top.niunaijun.blackbox.core.NativeCore;
 import top.niunaijun.blackbox.core.env.BEnvironment;
 import top.niunaijun.blackbox.core.system.DaemonService;
 import top.niunaijun.blackbox.core.system.ServiceManager;
+import top.niunaijun.blackbox.core.system.am.BActivityManagerService;
 import top.niunaijun.blackbox.core.system.user.BUserHandle;
 import top.niunaijun.blackbox.core.system.user.BUserInfo;
 import top.niunaijun.blackbox.entity.pm.InstallOption;
@@ -403,9 +404,26 @@ public class BlackBoxCore extends ClientConfiguration {
     
     private IBinder createFallbackService(String name) {
         try {
+            Slog.w(TAG, "Attempting fallback for service: " + name);
             
+            // Try to re-acquire the service through the SystemCallProvider
+            try {
+                Bundle bundle = new Bundle();
+                bundle.putString("_B_|_server_name_", name);
+                Bundle result = ProviderCall.callSafely(ProxyManifest.getBindProvider(), "VM", null, bundle);
+                if (result != null) {
+                    IBinder binder = BundleCompat.getBinder(result, "_B_|_server_");
+                    if (binder != null && binder.isBinderAlive()) {
+                        Slog.d(TAG, "Fallback succeeded for service: " + name);
+                        mServices.put(name, binder);
+                        return binder;
+                    }
+                }
+            } catch (Exception e) {
+                Slog.w(TAG, "Fallback provider call failed for " + name + ": " + e.getMessage());
+            }
             
-            Slog.w(TAG, "No fallback available for service: " + name + " (avoiding circular dependency)");
+            Slog.w(TAG, "No fallback available for service: " + name);
             return null;
         } catch (Exception e) {
             Slog.e(TAG, "Error creating fallback service for " + name, e);
@@ -1762,14 +1780,29 @@ public class BlackBoxCore extends ClientConfiguration {
             android.app.ActivityManager am = (android.app.ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
             if (am == null) return false;
             
+            // Use BActivityManagerService to get the ActivityStack properly
+            BActivityManagerService ams = BActivityManagerService.get();
+            if (ams == null) return false;
             
+            // Access the UserSpace's stack via reflection
+            java.lang.reflect.Field userSpaceField = ams.getClass().getDeclaredField("mUserSpace");
+            userSpaceField.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            Map<Integer, Object> userSpaceMap = (Map<Integer, Object>) userSpaceField.get(ams);
+            Object userSpace = userSpaceMap.get(userId);
+            if (userSpace == null) return false;
             
-            ServiceManager.get();
+            java.lang.reflect.Field stackField = userSpace.getClass().getDeclaredField("mStack");
+            stackField.setAccessible(true);
             top.niunaijun.blackbox.core.system.am.ActivityStack stack =
-                (top.niunaijun.blackbox.core.system.am.ActivityStack) ServiceManager.getService(ServiceManager.ACTIVITY_MANAGER);
+                (top.niunaijun.blackbox.core.system.am.ActivityStack) stackField.get(userSpace);
             if (stack == null) return false;
+            
+            java.lang.reflect.Field tasksField = stack.getClass().getDeclaredField("mTasks");
+            tasksField.setAccessible(true);
+            @SuppressWarnings("unchecked")
             java.util.Map<Integer, top.niunaijun.blackbox.core.system.am.TaskRecord> tasks =
-                    top.niunaijun.blackbox.utils.Reflector.with(stack).field("mTasks").get();
+                    (java.util.Map<Integer, top.niunaijun.blackbox.core.system.am.TaskRecord>) tasksField.get(stack);
             if (tasks == null) return false;
             for (top.niunaijun.blackbox.core.system.am.TaskRecord task : tasks.values()) {
                 if (task.userId == userId && task.taskAffinity != null && task.taskAffinity.contains(packageName)) {

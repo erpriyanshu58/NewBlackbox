@@ -24,17 +24,15 @@ public class ProxyActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        finish();
 
         HookManager.get().checkEnv(HCallbackProxy.class);
-
 
         ProxyActivityRecord record = ProxyActivityRecord.create(getIntent());
         if (record.mTarget != null) {
             record.mTarget.setExtrasClassLoader(BlackBoxCore.getApplication().getClassLoader());
             startActivity(record.mTarget);
-            return;
         }
+        finish();
     }
 
     public static class P0 extends ProxyActivity {

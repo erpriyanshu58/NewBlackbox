@@ -47,7 +47,7 @@ public abstract class BlackManager<Service extends IInterface> {
 
         
         long currentTime = System.currentTimeMillis();
-        if (currentTime - mLastServiceCreationTime < MIN_SERVICE_CREATION_INTERVAL_MS) {
+        if (currentTime - mLastServiceCreationTime < MIN_SERVICE_CREATION_INTERVAL_MS && mService != null) {
             Log.d(TAG, "Rate limiting service creation for " + getServiceName());
             return mService; 
         }

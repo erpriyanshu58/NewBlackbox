@@ -81,12 +81,16 @@ public class BActivityManagerService extends IBActivityManagerService.Stub imple
         for (ResolveInfo resolve : resolves) {
             ProcessRecord processRecord = BProcessManagerService.get().findProcessRecord(resolve.activityInfo.packageName, resolve.activityInfo.processName, userId);
             if (processRecord == null) {
-                continue;
+                // Start the process if not already running
+                processRecord = BProcessManagerService.get().startProcessLocked(
+                        resolve.activityInfo.packageName, resolve.activityInfo.processName, userId, -1, Binder.getCallingPid());
             }
-            try {
-                processRecord.bActivityThread.bindApplication();
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            if (processRecord != null) {
+                try {
+                    processRecord.bActivityThread.bindApplication();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
         Intent shadow = new Intent();

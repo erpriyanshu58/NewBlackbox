@@ -193,17 +193,15 @@ public class BPackageManagerService extends IBPackageManagerService.Stub impleme
             if (N == 1) {
                 return query.get(0);
             } else if (N > 1) {
-                
-                
                 ResolveInfo r0 = query.get(0);
                 ResolveInfo r1 = query.get(1);
-                
-                
                 if (r0.priority != r1.priority
                         || r0.preferredOrder != r1.preferredOrder
                         || r0.isDefault != r1.isDefault) {
                     return query.get(0);
                 }
+                // Return first match as fallback when priorities are equal
+                return query.get(0);
             }
         }
         return null;
