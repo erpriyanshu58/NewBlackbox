@@ -14,6 +14,7 @@ android {
     
     defaultConfig {
         minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdkVersion
         consumerProguardFiles "consumer-rules.pro"
         ndk {
             abiFilters 'arm64-v8a', 'armeabi-v7a'
@@ -39,12 +40,6 @@ android {
         targetCompatibility JavaVersion.VERSION_21
     }
     
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:-deprecation" << "-Xlint:-unchecked" << "-Xlint:-rawtypes"
-        options.fork = true
-        options.forkOptions.jvmArgs << "-Xmx2048m"
-    }
-    
     testOptions {
         unitTests.returnDefaultValues = true
     }
@@ -60,16 +55,7 @@ android {
         abortOnError false
         warningsAsErrors false
         disable "UnusedResources", 'RestrictedApi'
-        textOutput "stdout"
-        textReport false
-        checkOnly 'NewApi', 'InlinedApi'
     }
-}
-
-tasks.withType(Javadoc) {
-    options.addStringOption('Xdoclint:none', '-quiet')
-    options.addStringOption('encoding', 'UTF-8')
-    options.addStringOption('charSet', 'UTF-8')
 }
 
 dependencies {

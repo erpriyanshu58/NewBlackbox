@@ -4,16 +4,6 @@ plugins {
     alias(libs.plugins.android.library) apply false
 }
 
-subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty('android')) {
-            android {
-                compileSdkVersion 35
-            }
-        }
-    }
-}
-
 ext {
     compileSdkVersion = 35
     targetSdkVersion = 35
