@@ -51,7 +51,6 @@ public class CornerLabelView extends View {
             try {
                 position = ta.getInt(R.styleable.CornerLabelView_position, LEFT_TOP);
                 text = ta.getString(R.styleable.CornerLabelView_text, Color.WHITE);
-                textColor = ta.getColor(R.styleable.CornerLabelView_text_color, Color.WHITE);
                 bgColor = ta.getColor(R.styleable.CornerLabelView_bg_color, Color.TRANSPARENT);
                 textSize = ta.getDimension(R.styleable.CornerLabelView_text_size, 28f);
                 sideLength = ta.getDimension(R.styleable.CornerLabelView_side_length, 0f);
